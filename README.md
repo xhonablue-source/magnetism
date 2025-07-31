@@ -1,0 +1,2 @@
+# magnetism
+math of magnetism
