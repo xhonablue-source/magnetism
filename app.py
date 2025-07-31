@@ -912,10 +912,3 @@ html_content = """
 
 # Render the HTML in Streamlit
 st.components.v1.html(html_content, height=2000, scrolling=True)
-
-# requirements.txt for Streamlit
-st.markdown("---")
-st.subheader("`requirements.txt` for this Streamlit application:")
-st.code("""
-streamlit
-""", language="text")
