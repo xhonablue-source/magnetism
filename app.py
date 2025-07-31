@@ -262,7 +262,7 @@ html_content = """
                     <div class="compass-center"></div>
                     <span class="compass-label N">N</span>
                     <span class="compass-label S">S</span>
-                    <span class="compass-label E">E">E</span>
+                    <span class="compass-label E">E</span>
                     <span class="compass-label W">W</span>
                 </div>
                 <div class="mt-4">
@@ -284,7 +284,7 @@ html_content = """
                 </p>
                 <p class="text-gray-700 mb-4">
                     Mathematically, for two magnetic poles, the force $F$ can be expressed as:
-                    $$ F = k \\frac{q_1 q_2}{r^2} $$
+                    $$ F = k \frac{q_1 q_2}{r^2} $$
                     where $k$ is the magnetic constant, $q_1$ and $q_2$ are the magnetic pole strengths, and $r$ is the distance between the poles. This relationship demonstrates that as the distance $r$ increases, the force $F$ diminishes rapidly.
                 </p>
             </div>
@@ -715,7 +715,7 @@ html_content = """
                     ],
                     tabs: {
                         "Videos": [
-                            { title: "Magnetic Fields: Crash Course Physics #32", url: "https://www.youtube.com/watch?v=VMz_G9VjQ_E" }
+                            { title: "Magnetic Fields: Crash Course Physics #32", url: "https://www.youtube.com/watch?v=SCnGfE7qxHc" }
                         ],
                         "Articles": [
                             { title: "What is a Magnetic Field?", url: "https://www.livescience.com/38059-magnetic-field.html" }
