@@ -262,7 +262,7 @@ html_content = """
                     <div class="compass-center"></div>
                     <span class="compass-label N">N</span>
                     <span class="compass-label S">S</span>
-                    <span class="compass-label E">E</span>
+                    <span class="compass-label E">E">E</span>
                     <span class="compass-label W">W</span>
                 </div>
                 <div class="mt-4">
