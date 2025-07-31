@@ -1,5 +1,3 @@
-# app.py
-
 import streamlit as st
 import streamlit.components.v1 as components
 
@@ -286,7 +284,7 @@ html_content = """
                 </p>
                 <p class="text-gray-700 mb-4">
                     Mathematically, for two magnetic poles, the force $F$ can be expressed as:
-                    $$ F = k \frac{q_1 q_2}{r^2} $$
+                    $$ F = k \\frac{q_1 q_2}{r^2} $$
                     where $k$ is the magnetic constant, $q_1$ and $q_2$ are the magnetic pole strengths, and $r$ is the distance between the poles. This relationship demonstrates that as the distance $r$ increases, the force $F$ diminishes rapidly.
                 </p>
             </div>
@@ -527,15 +525,14 @@ html_content = """
                             },
                             y: {
                                 beginAtZero: true,
-                                title: { display: true, text: 'Strength (arbitrary units)' }
+                                title: { display: true, text: 'Field Strength (arbitrary units)' }
                             }
                         },
                         plugins: {
-                            legend: { display: false },
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
-                                        return `Distance: ${context.parsed.x.toFixed(1)}, Strength: ${context.parsed.y.toFixed(2)}`;
+                                        return `Strength: ${context.parsed.y.toFixed(2)}`;
                                     }
                                 }
                             }
@@ -556,18 +553,21 @@ html_content = """
             let electromagnetChart;
 
             function calculateElectromagnetStrength(current, coils) {
-                return current * coils; // Simplified model
+                // Simplified linear relationship for illustrative purposes
+                return current * coils * 0.5; // Arbitrary constant for scaling
             }
 
             function updateElectromagnetChart() {
                 const current = parseFloat(currentSlider.value);
                 const coils = parseInt(coilsSlider.value);
-
                 currentValueSpan.textContent = current.toFixed(1);
                 coilsValueSpan.textContent = coils;
 
                 const strength = calculateElectromagnetStrength(current, coils);
                 electromagnetStrengthValueSpan.textContent = strength.toFixed(2);
+
+                const labels = ['Current', 'Coils'];
+                const data = [current * 10, coils]; // Scale current for visual comparison
 
                 if (electromagnetChart) {
                     electromagnetChart.destroy();
@@ -576,12 +576,12 @@ html_content = """
                 electromagnetChart = new Chart(electromagnetChartCtx, {
                     type: 'bar',
                     data: {
-                        labels: ['Current (Amps)', 'Coils', 'Calculated Strength'],
+                        labels: labels,
                         datasets: [{
-                            label: 'Value',
-                            data: [current, coils, strength],
-                            backgroundColor: ['#005A9C', '#F2A900', '#3b82f6'], // Blue, Orange, Lighter Blue
-                            borderColor: ['#004B80', '#D99500', '#2563eb'],
+                            label: 'Electromagnet Contribution',
+                            data: data,
+                            backgroundColor: ['#005A9C', '#F2A900'],
+                            borderColor: ['#005A9C', '#F2A900'],
                             borderWidth: 1
                         }]
                     },
@@ -591,15 +591,22 @@ html_content = """
                         scales: {
                             y: {
                                 beginAtZero: true,
-                                max: Math.max(currentSlider.max, coilsSlider.max, strength) * 1.1 // Adjust max for better visualization
+                                title: { display: true, text: 'Relative Contribution' }
                             }
                         },
                         plugins: {
-                            legend: { display: false },
+                            legend: {
+                                display: false
+                            },
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
-                                        return `${context.label}: ${context.parsed.y.toFixed(2)}`;
+                                        if (context.label === 'Current') {
+                                            return `Current: ${current.toFixed(1)} Amps (Scaled)`;
+                                        } else if (context.label === 'Coils') {
+                                            return `Coils: ${coils} turns`;
+                                        }
+                                        return '';
                                     }
                                 }
                             }
@@ -611,304 +618,275 @@ html_content = """
             coilsSlider.addEventListener('input', updateElectromagnetChart);
             updateElectromagnetChart(); // Initial chart render
 
-            // Quick Understanding Check (Magnetism Specific)
-            const magnetismQuizQuestions = [
-                {
-                    question: "What happens to the magnetic force as the distance between magnets increases?",
-                    options: ["It increases", "It decreases rapidly", "It stays the same", "It becomes infinite"],
-                    correct: "It decreases rapidly",
-                    explanation: "Magnetic force follows an inverse square law, meaning it decreases quickly with distance."
-                },
+            // Quiz Questions
+            const quizQuestions = [
                 {
                     question: "Which of these factors increases the strength of an electromagnet?",
-                    options: ["Decreasing the current", "Decreasing the number of coils", "Increasing the current", "Using a non-magnetic core"],
-                    correct: "Increasing the current",
-                    explanation: "Both increasing current and number of coils strengthen an electromagnet."
+                    options: ["Decreasing the current", "Increasing the number of coils", "Using a non-magnetic core", "Increasing the distance from the core"],
+                    answer: "Increasing the number of coils"
                 },
                 {
-                    question: "Magnetic field lines typically emerge from which pole of a magnet?",
-                    options: ["South pole", "North pole", "Center", "They don't emerge from poles"],
-                    correct: "North pole",
-                    explanation: "By convention, magnetic field lines emerge from the North pole and enter the South pole."
+                    question: "How does magnetic field strength change as you move further from a magnet?",
+                    options: ["It increases linearly", "It decreases linearly", "It decreases by the inverse square of the distance", "It remains constant"],
+                    answer: "It decreases by the inverse square of the distance"
+                },
+                {
+                    question: "What is the primary function of a magnetic field?",
+                    options: ["To generate heat", "To exert force on moving electric charges", "To produce light", "To conduct electricity"],
+                    answer: "To exert force on moving electric charges"
                 }
             ];
 
-            const magnetismQuizContainer = document.getElementById('magnetism-quiz-questions');
-            magnetismQuizQuestions.forEach((q, qIndex) => {
+            const quizContainer = document.getElementById('magnetism-quiz-questions');
+            quizQuestions.forEach((q, index) => {
                 const questionDiv = document.createElement('div');
-                questionDiv.classList.add('mb-6', 'p-4', 'bg-gray-50', 'rounded-lg', 'shadow-sm');
-                questionDiv.innerHTML = `
-                    <p class="font-bold text-gray-800 mb-3">${q.question}</p>
-                    <div id="magnetism-options-${qIndex}" class="space-y-2"></div>
-                    <button class="check-magnetism-answer mt-4 bg-accent text-white font-bold py-2 px-4 rounded-lg hover:bg-opacity-90 transition-colors" data-index="${qIndex}">Check Answer</button>
-                    <div id="magnetism-feedback-${qIndex}" class="mt-3 text-sm hidden"></div>
-                `;
-                const optionsDiv = questionDiv.querySelector(`#magnetism-options-${qIndex}`);
-                q.options.forEach((option, oIndex) => {
-                    const radioDiv = document.createElement('div');
-                    radioDiv.innerHTML = `
-                        <input type="radio" id="magnetism-quiz-${qIndex}-option-${oIndex}" name="magnetism-quiz-q-${qIndex}" value="${option}" class="mr-2 accent-color">
-                        <label for="magnetism-quiz-${qIndex}-option-${oIndex}" class="text-gray-700">${option}</label>
+                questionDiv.className = 'mb-6 p-4 border border-gray-200 rounded-lg shadow-sm';
+                questionDiv.innerHTML = `<p class="font-bold text-gray-800 mb-3">Question ${index + 1}: ${q.question}</p>`;
+
+                q.options.forEach((option, optIndex) => {
+                    questionDiv.innerHTML += `
+                        <label class="block mb-2 text-gray-700">
+                            <input type="radio" name="question${index}" value="${option}" class="mr-2">
+                            ${option}
+                        </label>
                     `;
-                    optionsDiv.appendChild(radioDiv);
                 });
-                magnetismQuizContainer.appendChild(questionDiv);
+                quizContainer.appendChild(questionDiv);
             });
 
-            magnetismQuizContainer.querySelectorAll('.check-magnetism-answer').forEach(button => {
-                button.addEventListener('click', (event) => {
-                    const index = event.target.dataset.index;
-                    const selectedOption = document.querySelector(`input[name="magnetism-quiz-q-${index}"]:checked`);
-                    const feedbackDiv = document.getElementById(`magnetism-feedback-${index}`);
-                    feedbackDiv.classList.remove('hidden', 'bg-green-100', 'text-green-700', 'bg-red-100', 'text-red-700');
+            const checkQuizButton = document.createElement('button');
+            checkQuizButton.textContent = 'Check My Answers';
+            checkQuizButton.className = 'mt-4 bg-accent text-white font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors';
+            quizContainer.appendChild(checkQuizButton);
 
-                    if (selectedOption && selectedOption.value === magnetismQuizQuestions[index].correct) {
-                        feedbackDiv.textContent = `✅ Correct! ${magnetismQuizQuestions[index].explanation}`;
-                        feedbackDiv.classList.add('bg-green-100', 'text-green-700');
-                    } else {
-                        feedbackDiv.textContent = `❌ Try again! The correct answer is ${magnetismQuizQuestions[index].correct}. ${magnetismQuizQuestions[index].explanation}`;
-                        feedbackDiv.classList.add('bg-red-100', 'text-red-700');
+            const quizFeedbackDiv = document.createElement('div');
+            quizFeedbackDiv.className = 'mt-4 p-3 rounded-md hidden';
+            quizContainer.appendChild(quizFeedbackDiv);
+
+            checkQuizButton.addEventListener('click', () => {
+                let correctCount = 0;
+                quizQuestions.forEach((q, index) => {
+                    const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+                    if (selectedOption && selectedOption.value === q.answer) {
+                        correctCount++;
                     }
                 });
+
+                if (correctCount === quizQuestions.length) {
+                    quizFeedbackDiv.className = 'mt-4 p-3 bg-green-100 text-green-700 rounded-md';
+                    quizFeedbackDiv.textContent = `🎉 Fantastic! You got all ${correctCount} questions correct! You're a magnetism master!`;
+                } else {
+                    quizFeedbackDiv.className = 'mt-4 p-3 bg-red-100 text-red-700 rounded-md';
+                    quizFeedbackDiv.textContent = `Keep trying! You got ${correctCount} out of ${quizQuestions.length} correct. Review the concepts and try again!`;
+                }
+                quizFeedbackDiv.classList.remove('hidden');
             });
 
-            // Reflection
-            const reflectionTextarea = document.getElementById('reflection-text');
+            // Reflection Submission
             const submitReflectionButton = document.getElementById('submit-reflection');
+            const reflectionTextarea = document.getElementById('reflection-text');
             const reflectionFeedbackDiv = document.getElementById('reflection-feedback');
 
             submitReflectionButton.addEventListener('click', () => {
-                if (reflectionTextarea.value.trim()) {
-                    reflectionFeedbackDiv.textContent = "✅ Excellent scientific thinking! You're connecting math to the real world!";
-                    reflectionFeedbackDiv.classList.remove('hidden', 'bg-red-100', 'text-red-700');
-                    reflectionFeedbackDiv.classList.add('bg-green-100', 'text-green-700');
+                if (reflectionTextarea.value.trim().length > 20) {
+                    reflectionFeedbackDiv.className = 'mt-4 p-3 bg-green-100 text-green-700 rounded-md';
+                    reflectionFeedbackDiv.textContent = 'Thank you for your thoughtful reflection! Your insights help us understand how you connect math to the real world.';
                 } else {
-                    reflectionFeedbackDiv.textContent = "Please share your thoughts to complete the reflection.";
-                    reflectionFeedbackDiv.classList.remove('hidden', 'bg-green-100', 'text-green-700');
-                    reflectionFeedbackDiv.classList.add('bg-red-100', 'text-red-700');
+                    reflectionFeedbackDiv.className = 'mt-4 p-3 bg-red-100 text-red-700 rounded-md';
+                    reflectionFeedbackDiv.textContent = 'Please write a bit more for your reflection (at least 20 characters) to help us understand your thoughts!';
                 }
+                reflectionFeedbackDiv.classList.remove('hidden');
             });
 
-            // Resources Section
+            // Resources Section - Dynamic Content
             const physicsMathStrandSelect = document.getElementById('physics-math-strand');
-            const strandInfoMagnetismDiv = document.getElementById('strand-info-magnetism');
+            const strandInfoDiv = document.getElementById('strand-info-magnetism');
             const recommendedResourcesTitle = document.getElementById('recommended-resources-title');
             const recommendedResourcesList = document.getElementById('recommended-resources-list');
-            const magnetismResourceTabsContainer = document.querySelector('#magnetism-resource-tabs-container nav');
-            const magnetismResourceContentContainer = document.getElementById('magnetism-resource-content-container');
+            const resourceTabsContainer = document.getElementById('magnetism-resource-tabs-container').querySelector('nav');
+            const resourceContentContainer = document.getElementById('magnetism-resource-content-container');
 
-            const magnetismResources = {
-                "📺 Video Tutorials": [
-                    { name: "Khan Academy - Magnetism", url: "https://www.khanacademy.org/science/physics/magnetic-forces-and-magnetic-fields", description: "Comprehensive video series on magnetic forces and fields." },
-                    { name: "Physics Classroom - Magnetism", url: "https://www.physicsclassroom.com/class/circuits/Lesson-4/Magnetism", description: "Tutorials on magnetic concepts and principles." },
-                    { name: "Veritasium - Magnets: How Do They Work?", url: "https://www.youtube.com/watch?v=hFAOXzXrX2I", description: "Engaging video explaining the fundamental nature of magnets." }
-                ],
-                "💻 Interactive Tools": [
-                    { name: "PhET Electromagnetism Simulation", url: "https://phet.colorado.edu/sims/html/faraday/latest/faraday_en.html", description: "Interactive simulation to explore electromagnets and Faraday's Law." },
-                    { name: "GeoGebra Magnetic Field Visualizer", url: "https://www.geogebra.org/m/k2984k83", description: "Visualize magnetic fields from various sources." }
-                ],
-                "📚 Study Guides & Practice": [
-                    { name: "HyperPhysics - Magnetism", url: "http://hyperphysics.phy-astr.gsu.edu/hbase/magnetic/magcon.html", description: "Detailed concepts and equations related to magnetism." },
-                    { name: "SparkNotes - Magnetism", url: "https://www.sparknotes.com/physics/magnetism/", description: "Study guide with summaries and quizzes on magnetism." }
-                ],
-                "📖 Reference Materials": [
-                    { name: "NGSS - Forces and Interactions", url: "https://www.nextgenscience.org/topic-arrangement/hsps2-forces-and-interactions", description: "Next Generation Science Standards for high school physics." },
-                    { name: "Wikipedia - Magnetism", url: "https://en.wikipedia.org/wiki/Magnetism", description: "Comprehensive overview of magnetism." }
-                ]
-            };
-
-            const recommendedMagnetismResources = {
-                "HS-PS2-5 – Forces and Motion: Electric and Magnetic Fields": [
-                    "Khan Academy - Magnetic Forces and Fields",
-                    "PhET Electromagnetism Simulation",
-                    "HyperPhysics - Magnetism"
-                ],
-                "HS-PS3-2 – Energy: Electromagnetism and Energy Conversion": [
-                    "PhET Electromagnetism Simulation",
-                    "Veritasium - Magnets: How Do They Work?",
-                    "Physics Classroom - Magnetism"
-                ],
-                "HSA.CED.A.2 – Create equations in two or more variables to represent relationships between quantities": [
-                    "HyperPhysics - Magnetism (focus on equations)",
-                    "Khan Academy - Magnetic Force on a Current-Carrying Wire"
-                ],
-                "HSF.IF.B.4 – Interpret key features of graphs and tables in terms of quantities": [
-                    "Magnetic Field Strength vs. Distance (this app's visualization)",
-                    "Physics Classroom - Magnetism (graph interpretation)"
-                ]
-            };
-
-            function updateRecommendedResources() {
-                const selectedStrand = physicsMathStrandSelect.value;
-                let emphasisText = "";
-                let priorityResources = [];
-
-                if (selectedStrand.includes("HS-PS2-5")) {
-                    emphasisText = "Focus: Electric and Magnetic Fields";
-                    priorityResources = recommendedMagnetismResources["HS-PS2-5 – Forces and Motion: Electric and Magnetic Fields"];
-                } else if (selectedStrand.includes("HS-PS3-2")) {
-                    emphasisText = "Focus: Electromagnetism and Energy Conversion";
-                    priorityResources = recommendedMagnetismResources["HS-PS3-2 – Energy: Electromagnetism and Energy Conversion"];
-                } else if (selectedStrand.includes("HSA.CED.A.2")) {
-                    emphasisText = "Focus: Creating Equations for Relationships";
-                    priorityResources = recommendedMagnetismResources["HSA.CED.A.2 – Create equations in two or more variables to represent relationships between quantities"];
-                } else if (selectedStrand.includes("HSF.IF.B.4")) {
-                    emphasisText = "Focus: Interpreting Graphs and Quantities";
-                    priorityResources = recommendedMagnetismResources["HSF.IF.B.4 – Interpret key features of graphs and tables in terms of quantities"];
+            const resourceData = {
+                "HS-PS2-5 – Forces and Motion: Electric and Magnetic Fields": {
+                    info: "This strand focuses on understanding how electric and magnetic forces interact and their applications.",
+                    resources: [
+                        { name: "Khan Academy: Magnetic Fields", url: "https://www.khanacademy.org/science/physics/magnetic-forces-and-magnetic-fields" },
+                        { name: "Physics Classroom: Magnetic Fields", url: "https://www.physicsclassroom.com/class/circuits/Lesson-4/Magnetic-Fields" }
+                    ],
+                    tabs: {
+                        "Videos": [
+                            { title: "Magnetic Fields: Crash Course Physics #32", url: "https://www.youtube.com/watch?v=VMz_G9VjQ_E" }
+                        ],
+                        "Articles": [
+                            { title: "What is a Magnetic Field?", url: "https://www.livescience.com/38059-magnetic-field.html" }
+                        ]
+                    }
+                },
+                "HS-PS3-2 – Energy: Electromagnetism and Energy Conversion": {
+                    info: "This strand explores the relationship between electromagnetism and energy conversion, such as in generators and motors.",
+                    resources: [
+                        { name: "Khan Academy: Electromagnetism", url: "https://www.khanacademy.org/science/physics/magnetic-forces-and-magnetic-fields/electromagnets" },
+                        { name: "SparkFun: Electromagnetism Tutorial", url: "https://learn.sparkfun.com/tutorials/electromagnetism-tutorial/all" }
+                    ],
+                    tabs: {
+                        "Videos": [
+                            { title: "Electromagnets", url: "https://www.youtube.com/watch?v=vxWd62vQJtI" }
+                        ],
+                        "Articles": [
+                            { title: "How Electromagnets Work", url: "https://www.explainthatstuff.com/how-electromagnets-work.html" }
+                        ]
+                    }
+                },
+                "HSA.CED.A.2 – Create equations in two or more variables to represent relationships between quantities": {
+                    info: "This math standard focuses on building mathematical models (equations) to describe real-world relationships, like those in magnetism.",
+                    resources: [
+                        { name: "Khan Academy: Writing Equations with Two Variables", url: "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:forms-of-linear-equations/x2f8bb11595b61c86:writing-linear-equations-from-word-problems/v/writing-equations-from-word-problems" },
+                        { name: "Desmos Graphing Calculator", url: "https://www.desmos.com/calculator" }
+                    ],
+                    tabs: {
+                        "Videos": [
+                            { title: "Algebra - Equations with Two Variables", url: "https://www.youtube.com/watch?v=2-yS7s2-s7k" }
+                        ],
+                        "Articles": [
+                            { title: "Linear Equations in Two Variables", url: "https://www.cuemath.com/algebra/linear-equations-in-two-variables/" }
+                        ]
+                    }
+                },
+                "HSF.IF.B.4 – Interpret key features of graphs and tables in terms of quantities": {
+                    info: "This math standard helps you understand how to read and interpret graphs and data tables, which is essential for analyzing magnetic field strength and electromagnetism visualizations.",
+                    resources: [
+                        { name: "Khan Academy: Interpreting Graphs", url: "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:functions/x2f8bb11595b61c86:interpreting-graphs/v/interpreting-graphs-example" },
+                        { name: "Math is Fun: Reading Graphs", url: "https://www.mathsisfun.com/data/reading-graphs.html" }
+                    ],
+                    tabs: {
+                        "Videos": [
+                            { title: "Interpreting Graphs", url: "https://www.youtube.com/watch?v=kY67y_Lq104" }
+                        ],
+                        "Articles": [
+                            { title: "How to Read and Interpret Graphs", url: "https://www.wikihow.com/Read-and-Interpret-Graphs" }
+                        ]
+                    }
                 }
+            };
 
-                strandInfoMagnetismDiv.textContent = `🎯 ${emphasisText}`;
-                strandInfoMagnetismDiv.classList.remove('hidden');
+            function updateResources() {
+                const selectedStrand = physicsMathStrandSelect.value;
+                const data = resourceData[selectedStrand];
+
+                strandInfoDiv.innerHTML = `<p>${data.info}</p>`;
+                recommendedResourcesTitle.textContent = selectedStrand;
 
                 recommendedResourcesList.innerHTML = '';
-                priorityResources.forEach(resourceName => {
-                    const listItem = document.createElement('li');
-                    listItem.classList.add('flex', 'items-start');
-                    listItem.innerHTML = `⭐ <span class="ml-2 font-bold">${resourceName}</span>`;
-                    recommendedResourcesList.appendChild(listItem);
+                data.resources.forEach(res => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<a href="${res.url}" target="_blank" class="text-blue-600 hover:underline">${res.name}</a>`;
+                    recommendedResourcesList.appendChild(li);
                 });
+
+                // Clear existing tabs and content
+                resourceTabsContainer.innerHTML = '';
+                resourceContentContainer.innerHTML = '';
+
+                let firstTab = true;
+                for (const tabName in data.tabs) {
+                    const tabButton = document.createElement('button');
+                    tabButton.className = `py-2 px-4 text-sm font-medium text-center rounded-t-lg border-b-2 ${firstTab ? 'border-accent-color text-accent-color' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`;
+                    tabButton.textContent = tabName;
+                    tabButton.setAttribute('data-tab', tabName);
+                    resourceTabsContainer.appendChild(tabButton);
+
+                    const tabContent = document.createElement('div');
+                    tabContent.id = `tab-content-${tabName.toLowerCase()}`;
+                    tabContent.className = `p-4 ${firstTab ? '' : 'hidden'}`;
+                    tabContent.innerHTML = `<ul class="list-disc list-inside space-y-2">`;
+                    data.tabs[tabName].forEach(item => {
+                        tabContent.innerHTML += `<li><a href="${item.url}" target="_blank" class="text-blue-600 hover:underline">${item.title}</a></li>`;
+                    });
+                    tabContent.innerHTML += `</ul>`;
+                    resourceContentContainer.appendChild(tabContent);
+
+                    tabButton.addEventListener('click', (event) => {
+                        // Deactivate all tabs
+                        resourceTabsContainer.querySelectorAll('button').forEach(btn => {
+                            btn.classList.remove('border-accent-color', 'text-accent-color');
+                            btn.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                        });
+                        // Hide all content
+                        resourceContentContainer.querySelectorAll('div').forEach(content => {
+                            content.classList.add('hidden');
+                        });
+
+                        // Activate clicked tab
+                        event.target.classList.add('border-accent-color', 'text-accent-color');
+                        event.target.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+
+                        // Show corresponding content
+                        document.getElementById(`tab-content-${event.target.getAttribute('data-tab').toLowerCase()}`).classList.remove('hidden');
+                    });
+
+                    firstTab = false;
+                }
             }
-            physicsMathStrandSelect.addEventListener('change', updateRecommendedResources);
-            updateRecommendedResources(); // Initial call
 
-            // Populate Additional Learning Resources tabs
-            let currentResourceTab = null;
-            Object.keys(magnetismResources).forEach((category, index) => {
-                const button = document.createElement('button');
-                button.classList.add('resource-tab', 'whitespace-nowrap', 'py-4', 'px-1', 'border-b-2', 'border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300', 'font-medium', 'text-sm');
-                button.textContent = category;
-                button.dataset.category = category;
-                magnetismResourceTabsContainer.appendChild(button);
+            physicsMathStrandSelect.addEventListener('change', updateResources);
+            updateResources(); // Initial call
 
-                const contentDiv = document.createElement('div');
-                contentDiv.classList.add('resource-tab-pane', 'hidden', 'p-4', 'bg-gray-50', 'rounded-lg', 'shadow-sm');
-                contentDiv.id = `resource-pane-${index}`;
-                magnetismResources[category].forEach(item => {
-                    contentDiv.innerHTML += `
-                        <p class="font-bold text-gray-800 mb-1"><a href="${item.url}" target="_blank" class="text-accent-color hover:underline">${item.name}</a></p>
-                        <p class="text-gray-700 mb-3">📝 ${item.description}</p>
-                        <hr class="my-2 border-gray-200">
-                    `;
-                });
-                magnetismResourceContentContainer.appendChild(contentDiv);
-            });
+            // Study Plan Generation
+            const currentLevelSelect = document.getElementById('current-level-select-magnetism');
+            const studyTimeSelect = document.getElementById('study-time-select-magnetism');
+            const generateStudyPlanButton = document.getElementById('generate-study-plan-magnetism');
+            const studyPlanOutputDiv = document.getElementById('study-plan-output-magnetism');
 
-            function activateResourceTab(category) {
-                document.querySelectorAll('.resource-tab').forEach(btn => {
-                    if (btn.dataset.category === category) {
-                        btn.classList.add('active', 'border-accent-color', 'text-accent-color');
-                        btn.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
-                    } else {
-                        btn.classList.remove('active', 'border-accent-color', 'text-accent-color');
-                        btn.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
-                    }
-                });
-                document.querySelectorAll('.resource-tab-pane').forEach(pane => {
-                    if (pane.id === `resource-pane-${Object.keys(magnetismResources).indexOf(category)}`) {
-                        pane.classList.remove('hidden');
-                    } else {
-                        pane.classList.add('hidden');
-                    }
-                });
-            }
+            generateStudyPlanButton.addEventListener('click', () => {
+                const level = currentLevelSelect.value;
+                const time = studyTimeSelect.value;
+                let plan = '';
 
-            magnetismResourceTabsContainer.querySelectorAll('.resource-tab').forEach(button => {
-                button.addEventListener('click', (event) => {
-                    activateResourceTab(event.target.dataset.category);
-                });
-            });
-            activateResourceTab(Object.keys(magnetismResources)[0]); // Activate first tab by default
-
-            // Study Plan Generator
-            const currentLevelSelectMagnetism = document.getElementById('current-level-select-magnetism');
-            const studyTimeSelectMagnetism = document.getElementById('study-time-select-magnetism');
-            const generateStudyPlanButtonMagnetism = document.getElementById('generate-study-plan-magnetism');
-            const studyPlanOutputMagnetismDiv = document.getElementById('study-plan-output-magnetism');
-
-            generateStudyPlanButtonMagnetism.addEventListener('click', () => {
-                const currentLevel = currentLevelSelectMagnetism.value;
-                const studyTime = studyTimeSelectMagnetism.value;
-                let planContent = "";
-                let tip = "";
-
-                if (currentLevel.includes("Beginner")) {
-                    planContent = `
-                        <h3 class="text-xl font-bold accent-color mb-2">Week 1-2: Foundations of Magnetism</h3>
-                        <ul class="list-disc list-inside text-gray-700 space-y-1">
-                            <li>Watch Khan Academy's "Magnetism" intro videos.</li>
-                            <li>Explore the PhET Electromagnetism Simulation to get a feel for fields.</li>
-                            <li>Complete the Quick Understanding Check quizzes in this app.</li>
-                        </ul>
-                        <h3 class="text-xl font-bold accent-color mt-4 mb-2">Week 3-4: Magnetic Force & Fields</h3>
-                        <ul class="list-disc list-inside text-gray-700 space-y-1">
-                            <li>Focus on understanding magnetic field lines and poles.</li>
-                            <li>Experiment with the "Magnetic Field Strength vs. Distance" visualization.</li>
-                            <li>Read the Physics Classroom tutorials on magnetism.</li>
-                        </ul>
-                    `;
-                } else if (currentLevel.includes("Intermediate")) {
-                    planContent = `
-                        <h3 class="text-xl font-bold accent-color mb-2">Week 1: Reinforce Basics & Electromagnetism</h3>
-                        <ul class="list-disc list-inside text-gray-700 space-y-1">
-                            <li>Review basic magnetic concepts.</li>
-                            <li>Deep dive into the "Electromagnet Strength" visualization, changing current and coils.</li>
-                            <li>Read about the Right-Hand Rule for current and magnetic fields.</li>
-                        </ul>
-                        <h3 class="text-xl font-bold accent-color mt-4 mb-2">Week 2-3: Applications & Problem Solving</h3>
-                        <ul class="list-disc list-inside text-gray-700 space-y-1">
-                            <li>Research real-world applications like electric motors and generators.</li>
-                            <li>Try to explain how a compass works using magnetic field concepts.</li>
-                            <li>Work through practice problems on magnetic force calculations (from online resources).</li>
-                        </ul>
-                    `;
-                } else if (currentLevel.includes("Advanced")) {
-                    planContent = `
-                        <h3 class="text-xl font-bold accent-color mb-2">Week 1: Advanced Electromagnetic Concepts</h3>
-                        <ul class="list-disc list-inside text-gray-700 space-y-1">
-                            <li>Explore Faraday's Law of Induction and Lenz's Law.</li>
-                            <li>Research magnetic materials (ferromagnetism, paramagnetism, diamagnetism).</li>
-                            <li>Investigate the math behind magnetic flux.</li>
-                        </ul>
-                        <h3 class="text-xl font-bold accent-color mt-4 mb-2">Week 2: Future Technologies & Research</h3>
-                        <ul class="list-disc list-inside text-gray-700 space-y-1">
-                            <li>Research technologies like MRI, maglev trains, or fusion reactors.</li>
-                            <li>Consider how quantum mechanics relates to magnetism.</li>
-                            <li>Propose a new application of electromagnetism.</li>
-                        </ul>
-                    `;
-                } else { // Expert
-                    planContent = `
-                        <h3 class="text-xl font-bold accent-color mb-2">Ongoing Challenge Plan:</h3>
-                        <ul class="list-disc list-inside text-gray-700 space-y-1">
-                            <li>Dive into vector calculus for advanced electromagnetism (Maxwell's Equations).</li>
-                            <li>Mentor other students in magnetism and physics.</li>
-                            <li>Explore current research in condensed matter physics or plasma physics related to magnetism.</li>
-                        </ul>
-                    `;
+                if (level.includes('Beginner')) {
+                    plan += `<p class="font-bold text-lg mb-2">Your Beginner Study Plan (${time}):</p>`;
+                    plan += `<ul class="list-disc list-inside space-y-1">
+                        <li>Week 1: Focus on "Key Concepts: Magnetic Fields" and the Compass Visualization.</li>
+                        <li>Week 2: Explore "Magnetic Force and Inverse Square Law" with the Field Strength Visualization.</li>
+                        <li>Week 3: Dive into "Electromagnetism" and its interactive visualization.</li>
+                        <li>Daily: Spend 15-20 minutes reviewing definitions and trying the quiz questions.</li>
+                        <li>Weekly: Revisit visualizations and try to explain them in your own words.</li>
+                    </ul>`;
+                } else if (level.includes('Intermediate')) {
+                    plan += `<p class="font-bold text-lg mb-2">Your Intermediate Study Plan (${time}):</p>`;
+                    plan += `<ul class="list-disc list-inside space-y-1">
+                        <li>Week 1: Review all Key Concepts, focusing on the mathematical formulas.</li>
+                        <li>Week 2: Experiment with all visualizations, noting how changes in variables affect outcomes.</li>
+                        <li>Week 3: Focus on the Assessment section, trying to explain *why* each answer is correct.</li>
+                        <li>Daily: Practice deriving relationships or sketching field lines.</li>
+                        <li>Weekly: Research one real-world application of magnetism in more detail.</li>
+                    </ul>`;
+                } else if (level.includes('Advanced')) {
+                    plan += `<p class="font-bold text-lg mb-2">Your Advanced Study Plan (${time}):</p>`;
+                    plan += `<ul class="list-disc list-inside space-y-1">
+                        <li>Week 1: Research advanced topics like Lorentz force, magnetic permeability, or Maxwell's equations.</li>
+                        <li>Week 2: Explore complex applications like magnetic levitation or advanced MRI principles.</li>
+                        <li>Week 3: Design your own simple magnetic experiment or thought experiment.</li>
+                        <li>Daily: Challenge yourself with complex problems from external physics resources.</li>
+                        <li>Weekly: Discuss advanced concepts with peers or mentors.</li>
+                    </ul>`;
+                } else if (level.includes('Expert')) {
+                    plan += `<p class="font-bold text-lg mb-2">Your Expert Study Plan (${time}):</p>`;
+                    plan += `<ul class="list-disc list-inside space-y-1">
+                        <li>Ongoing: Delve into research papers on cutting-edge magnetic technologies or theoretical physics.</li>
+                        <li>Ongoing: Consider participating in physics competitions or science fairs.</li>
+                        <li>Ongoing: Explore academic pathways in electromagnetism, quantum physics, or materials science.</li>
+                        <li>Connect with university professors or industry professionals in related fields.</li>
+                    </ul>`;
                 }
 
-                if (studyTime.includes("1-2 hours")) {
-                    tip = "💡 **Tip:** Focus on mastering one concept per session. Short, consistent practice is key!";
-                } else if (studyTime.includes("3-4 hours")) {
-                    tip = "💡 **Tip:** Balance conceptual understanding with problem-solving practice. Use interactive tools to visualize.";
-                } else if (studyTime.includes("5-6 hours")) {
-                    tip = "💡 **Tip:** Challenge yourself with more complex problems and try to explain concepts to a peer.";
-                } else { // 7+ hours
-                    tip = "💡 **Tip:** Consider exploring university-level physics resources or engaging in science fair projects related to magnetism.";
-                }
-
-                studyPlanOutputMagnetismDiv.innerHTML = `<p class="font-bold text-green-700 mb-3">🎯 Your Personalized Magnetism Mastery Plan:</p>${planContent}<p class="mt-4 text-blue-700">${tip}</p>`;
-                studyPlanOutputMagnetismDiv.classList.remove('hidden');
-                studyPlanOutputMagnetismDiv.classList.add('bg-green-50', 'border-l-4', 'border-green-500');
+                studyPlanOutputDiv.innerHTML = plan;
+                studyPlanOutputDiv.classList.remove('hidden');
             });
-
-            // Initial calls
-            updateWelcomeMessage();
         });
     </script>
 </body>
 </html>
 """
 
-# Render the HTML in Streamlit
-st.components.v1.html(html_content, height=2000, scrolling=True)
+# Render the HTML content
+components.html(html_content, height=1000, scrolling=True)
