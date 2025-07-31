@@ -4,20 +4,11 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 # --- Page Setup ---
-st.set_page_config(page_title="The Math of Magnetism", page_icon="🌌", layout="wide")
+st.set_page_config(page_title="MathCraft: The Math of Magnetism", page_icon="🌌", layout="wide")
 
-# --- Developer Credit (Matching the style of Panther Vision) ---
-col1, col2 = st.columns([1, 4])
-with col1:
-    # Placeholder for Englewood STEM HS Logo - ensure you have 'englewood_stem_logo.png' in your project
-    try:
-        st.image("englewood_stem_logo.png", width=80)
-    except:
-        st.write("Logo Placeholder") # Fallback if logo file not found
-
-with col2:
-    st.markdown("### www.cognitivecloud.ai")
-    st.markdown("**Developed for Englewood STEM HS by Xavier Honablue M.Ed**")
+# --- Developer Credit ---
+st.markdown("### www.cognitivecloud.ai")
+st.markdown("**Developed by Xavier Honablue M.Ed**")
 
 st.markdown("---")
 
@@ -30,12 +21,16 @@ html_content = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Math of Magnetism: Unveiling Invisible Forces | Cognitive Cloud Education</title>
+    <title>MathCraft: The Math of Magnetism - Unveiling Invisible Forces | Cognitive Cloud Education</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals, Blue Accent, STEM High School Colors (implied from Streamlit: #1f77b4, #f0f2f6, #f8f9fa) -->
+    <!-- Application Structure Plan: A single-page interactive lesson structured thematically: Intro, Student Personalization, Key Concepts, Interactive Visualizations (Field Strength, Electromagnet, Compass), Quizzes, Reflection, Summary, Resources, Study Plan. Uses a sticky navigation for quick section access. Interactivity is driven by HTML form elements (sliders, selects, radios, text inputs) and custom JavaScript for dynamic content updates, graph rendering (Chart.js), and CSS transformations for visual elements. This structure provides a guided learning path while allowing students to explore specific concepts interactively, connecting abstract math to real-world physics. -->
+    <!-- Visualization & Content Choices: Magnetic Field Strength vs. Distance -> Goal: Illustrate inverse square law -> Viz: Line Chart -> Interaction: Slider for distance -> Justification: Clearly shows non-linear relationship -> Library: Chart.js. Electromagnet Strength -> Goal: Show factors affecting strength -> Viz: Bar Chart -> Interaction: Sliders for current and coils -> Justification: Compares impact of variables -> Library: Chart.js. Compass/Field Direction -> Goal: Visualize field direction -> Viz: HTML/CSS styled compass needle with rotation -> Interaction: Dropdown for scenarios -> Justification: Simple, direct visual feedback on directional concepts -> Library/Method: Vanilla JS, CSS Transforms. Quizzes -> Goal: Assess understanding -> Viz: Radio Buttons -> Interaction: Select answers, check button for feedback -> Justification: Standard quiz format. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -172,13 +167,13 @@ html_content = """
     <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="#" class="text-xl font-bold accent-color">
-                The Math of Magnetism
+                MathCraft: The Math of Magnetism
             </a>
             <div class="hidden md:flex space-x-6 text-gray-700">
-                <a href="#intro" class="nav-link">Intro</a>
-                <a href="#concepts" class="nav-link">Concepts</a>
+                <a href="#intro" class="nav-link">Introduction</a>
+                <a href="#concepts" class="nav-link">Key Concepts</a>
                 <a href="#visualizations" class="nav-link">Visualizations</a>
-                <a href="#quiz" class="nav-link">Quiz</a>
+                <a href="#assessment" class="nav-link">Assessment</a>
                 <a href="#resources" class="nav-link">Resources</a>
                 <a href="#study-plan" class="nav-link">Study Plan</a>
             </div>
@@ -187,10 +182,10 @@ html_content = """
             </button>
         </nav>
         <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
-            <a href="#intro" class="block py-2 text-gray-700">Intro</a>
-            <a href="#concepts" class="block py-2 text-gray-700">Concepts</a>
+            <a href="#intro" class="block py-2 text-gray-700">Introduction</a>
+            <a href="#concepts" class="block py-2 text-gray-700">Key Concepts</a>
             <a href="#visualizations" class="block py-2 text-gray-700">Visualizations</a>
-            <a href="#quiz" class="block py-2 text-gray-700">Quiz</a>
+            <a href="#assessment" class="block py-2 text-gray-700">Assessment</a>
             <a href="#resources" class="block py-2 text-gray-700">Resources</a>
             <a href="#study-plan" class="block py-2 text-gray-700">Study Plan</a>
         </div>
@@ -199,28 +194,36 @@ html_content = """
     <main class="container mx-auto px-6 py-8">
         <section id="intro" class="mb-12 p-6 bg-white rounded-lg shadow-md">
             <div class="flex items-center mb-4">
-                <img src="https://placehold.co/80x80/005A9C/FFFFFF?text=ESH" alt="Englewood STEM HS Logo" class="w-20 h-20 mr-4 rounded-full">
                 <div>
                     <h3 class="text-lg font-semibold accent-color">www.cognitivecloud.ai</h3>
-                    <p class="text-sm text-gray-600">Developed for Englewood STEM HS by Xavier Honablue M.Ed</p>
+                    <p class="text-sm text-gray-600">Developed by Xavier Honablue M.Ed</p>
                 </div>
             </div>
             <hr class="my-6">
-            <h1 class="text-4xl font-bold accent-color mb-4">🌌 The Math of Magnetism: Unveiling Invisible Forces</h1>
+            <h1 class="text-4xl font-bold accent-color mb-4">🌌 MathCraft: The Math of Magnetism - Unveiling Invisible Forces</h1>
             <p class="text-lg text-gray-700 mb-4">
-                Welcome, **Englewood STEM Panthers**! In this MathCraft lesson, **we** will explore how the invisible forces of magnetism are described and understood through the power of mathematics. From the compass guiding sailors to the MRI machines saving lives, magnetism is everywhere, and math is its language.
+                Welcome to this MathCraft lesson! This module explores how the invisible forces of magnetism are described and understood through the power of mathematics. From the compass guiding navigation to the MRI machines used in medicine, magnetism is ubiquitous, and mathematics serves as its fundamental language.
             </p>
             <hr class="my-6">
-            <h3 class="text-2xl font-bold accent-color mb-3">🎯 Objective:</h3>
+            <h3 class="text-2xl font-bold accent-color mb-3">🎯 Learning Objectives:</h3>
             <ul class="list-disc list-inside text-gray-700 space-y-2">
-                <li>Understand the concept of magnetic fields and forces.</li>
-                <li>Explore the inverse square law as it applies to magnetic strength.</li>
-                <li>Discover the relationship between electricity and magnetism (electromagnetism).</li>
-                <li>Connect abstract mathematical concepts to real-world magnetic phenomena.</li>
+                <li>Define and describe magnetic fields and forces.</li>
+                <li>Apply the inverse square law to quantify magnetic field strength.</li>
+                <li>Explain the principles of electromagnetism and its contributing factors.</li>
+                <li>Relate mathematical models to real-world magnetic phenomena and technological applications.</li>
             </ul>
             <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mt-6 rounded-md" role="alert">
-                <p class="font-bold">📚 Illinois Learning Standards Alignment:</p>
-                <p>This lesson aligns with high school physics and mathematics standards, including understanding forces, inverse square relationships, and applying mathematical models to scientific phenomena.</p>
+                <p class="font-bold">📚 Curriculum Alignment:</p>
+                <p>This lesson aligns with high school physics and mathematics curricula, covering topics such as forces, inverse square relationships, and the application of mathematical models to scientific phenomena.</p>
+            </div>
+            <div class="mt-6">
+                <label for="common-core-standard" class="block text-gray-700 text-lg font-medium mb-2">📋 Select Common Core Standard:</label>
+                <select id="common-core-standard" class="block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-accent-color focus:border-accent-color">
+                    <option>HSA.CED.A.1 - Create equations and inequalities in one variable and use them to solve problems.</option>
+                    <option>HSF.IF.B.4 - Interpret key features of graphs and tables in terms of quantities.</option>
+                    <option>HSF.BF.A.1 - Write a function that describes a relationship between two quantities.</option>
+                    <option>HSN.VM.A.1 - Recognize vector quantities as having both magnitude and direction.</option>
+                </select>
             </div>
             <div class="mt-6">
                 <label for="student-name" class="block text-gray-700 text-lg font-medium mb-2">Enter your name:</label>
@@ -237,7 +240,7 @@ html_content = """
             </div>
             <div id="welcome-message" class="mt-4 p-3 bg-green-100 text-green-700 rounded-md hidden"></div>
             <div class="mt-6">
-                <label for="learning-mode" class="block text-gray-700 text-lg font-medium mb-2">Pick your learning mode or style:</label>
+                <label for="learning-mode" class="block text-gray-700 text-lg font-medium mb-2">Select your learning mode or style:</label>
                 <select id="learning-mode" class="block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-accent-color focus:border-accent-color">
                     <option>🌟 Concept Builder</option>
                     <option>🚀 Experimenter</option>
@@ -249,12 +252,12 @@ html_content = """
 
         <section id="concepts" class="mb-12 p-6 bg-white rounded-lg shadow-md">
             <h2 class="text-3xl font-bold accent-color mb-4">🔬 Key Concepts in Magnetism</h2>
-            <p class="text-lg text-gray-700 mb-6">Before we dive into the visualizations, let's understand the core ideas that govern magnetism.</p>
+            <p class="text-lg text-gray-700 mb-6">This section introduces the fundamental principles that govern magnetic phenomena.</p>
 
             <div class="mb-8">
                 <h3 class="text-2xl font-bold accent-color mb-3">Magnetic Fields</h3>
                 <p class="text-gray-700 mb-4">
-                    A magnetic field is an area around a magnet or a moving electric charge where magnetic force is exerted. We often visualize these fields using **magnetic field lines**, which show the direction a compass would point. The density of these lines indicates the strength of the field.
+                    A **magnetic field** is a vector field that describes the magnetic influence of electric currents and magnetic materials. It is defined by the force it exerts on moving electric charges. Magnetic field lines are a common visualization tool, where the direction of the lines indicates the direction of the magnetic field, and the density of the lines represents the field's strength.
                 </p>
                 <div class="compass-container">
                     <div class="compass-needle" style="transform: rotate(0deg);"></div>
@@ -279,28 +282,30 @@ html_content = """
             <div class="mb-8">
                 <h3 class="text-2xl font-bold accent-color mb-3">Magnetic Force and Inverse Square Law</h3>
                 <p class="text-gray-700 mb-4">
-                    The force between two magnetic poles, or between a magnet and a magnetic material, follows an **inverse square law**. This means the magnetic force is inversely proportional to the square of the distance between them. As the distance increases, the force decreases rapidly.
+                    The interaction between magnetic poles or between a magnet and a ferromagnetic material is governed by a force that adheres to an **inverse square law**. This principle states that the magnitude of the magnetic force between two magnetic poles is directly proportional to the product of their pole strengths and inversely proportional to the square of the distance between them.
                 </p>
                 <p class="text-gray-700 mb-4">
-                    Mathematically, this can be expressed as: $F \propto 1/r^2$, where $F$ is the magnetic force and $r$ is the distance.
+                    Mathematically, for two magnetic poles, the force $F$ can be expressed as:
+                    $$ F = k \frac{q_1 q_2}{r^2} $$
+                    where $k$ is the magnetic constant, $q_1$ and $q_2$ are the magnetic pole strengths, and $r$ is the distance between the poles. This relationship demonstrates that as the distance $r$ increases, the force $F$ diminishes rapidly.
                 </p>
             </div>
 
             <div>
                 <h3 class="text-2xl font-bold accent-color mb-3">Electromagnetism</h3>
                 <p class="text-gray-700 mb-4">
-                    One of the most profound discoveries in physics is that electric currents create magnetic fields. This principle is called **electromagnetism**. The strength of an electromagnet depends on factors like the amount of current flowing through the wire and the number of coils in the wire.
+                    **Electromagnetism** is a fundamental force of nature that arises from the interaction of electric currents and magnetic fields. It describes how electric currents generate magnetic fields and how magnetic fields exert forces on electric currents. The strength of an electromagnet is directly proportional to the current flowing through its coils and the number of turns in the coil.
                 </p>
             </div>
         </section>
 
         <section id="visualizations" class="mb-12 p-6 bg-white rounded-lg shadow-md">
             <h2 class="text-3xl font-bold accent-color mb-4">📈 Interactive Magnetism Visualizations</h2>
-            <p class="text-lg text-gray-700 mb-6">Let's see how changing variables affects magnetic phenomena.</p>
+            <p class="text-lg text-gray-700 mb-6">These interactive visualizations allow for exploration of key magnetic principles by adjusting variables and observing the resulting changes.</p>
 
             <div class="mb-8">
                 <h3 class="text-2xl font-bold accent-color mb-3">Magnetic Field Strength vs. Distance</h3>
-                <p class="text-gray-700 mb-4">Observe how the magnetic field strength changes as the distance from a magnetic source increases. This demonstrates the inverse square law.</p>
+                <p class="text-gray-700 mb-4">This visualization demonstrates the inverse square law by showing how magnetic field strength diminishes with increasing distance from a magnetic source.</p>
                 <div class="mb-6">
                     <label for="distance-slider" class="block text-gray-700 text-lg font-medium mb-2">Distance from Source (units): <span id="distance-value">1</span></label>
                     <input type="range" id="distance-slider" min="1" max="10" value="1" step="0.1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#005A9C]">
@@ -315,7 +320,7 @@ html_content = """
 
             <div class="mb-8">
                 <h3 class="text-2xl font-bold accent-color mb-3">Electromagnet Strength</h3>
-                <p class="text-gray-700 mb-4">See how the strength of an electromagnet changes based on the current and the number of coils.</p>
+                <p class="text-gray-700 mb-4">This visualization illustrates how the strength of an electromagnet is influenced by the magnitude of the current and the number of turns in its coil.</p>
                 <div class="mb-6">
                     <label for="current-slider" class="block text-gray-700 text-lg font-medium mb-2">Current (Amps): <span id="current-value">1</span></label>
                     <input type="range" id="current-slider" min="0.5" max="5" value="1" step="0.5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#005A9C]">
@@ -333,40 +338,38 @@ html_content = """
             </div>
         </section>
 
-        <section id="quiz" class="mb-12 p-6 bg-white rounded-lg shadow-md">
-            <h2 class="text-3xl font-bold accent-color mb-4">🎲 Quick Understanding Check</h2>
+        <section id="assessment" class="mb-12 p-6 bg-white rounded-lg shadow-md">
+            <h2 class="text-3xl font-bold accent-color mb-4">🎲 Assessment: Quick Understanding Check</h2>
+            <p class="text-lg text-gray-700 mb-6">Test your comprehension of the key concepts presented in this module.</p>
             <div id="magnetism-quiz-questions">
                 <!-- Quiz questions will be dynamically inserted here -->
             </div>
-        </section>
-
-        <section id="reflection" class="mb-12 p-6 bg-white rounded-lg shadow-md">
-            <h2 class="text-3xl font-bold accent-color mb-4">🧾 Reflection</h2>
-            <label for="reflection-text" class="block text-gray-700 text-lg font-medium mb-2">Describe one real-world application of magnetism that you find fascinating, and explain how mathematics helps us understand or utilize it.</label>
+            <h2 class="text-3xl font-bold accent-color mb-4 mt-8">🧾 Reflection: Application Challenge</h2>
+            <label for="reflection-text" class="block text-gray-700 text-lg font-medium mb-2">Describe one real-world application of magnetism that you find fascinating, and explain how mathematical principles contribute to its understanding or utilization.</label>
             <textarea id="reflection-text" rows="5" class="block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-accent-color focus:border-accent-color"></textarea>
             <button id="submit-reflection" class="mt-4 bg-accent text-white font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors">Submit Reflection</button>
             <div id="reflection-feedback" class="mt-4 p-3 bg-green-100 text-green-700 rounded-md hidden"></div>
         </section>
 
         <section id="summary" class="mb-12 p-6 bg-white rounded-lg shadow-md">
-            <h2 class="text-3xl font-bold accent-color mb-4">🎓 What You've Learned</h2>
-            <p class="text-lg text-gray-700 mb-4">**Congratulations!** You've explored:</p>
+            <h2 class="text-3xl font-bold accent-color mb-4">🎓 Module Summary</h2>
+            <p class="text-lg text-gray-700 mb-4">Upon completion of this module, you have explored:</p>
             <ul class="list-disc list-inside text-gray-700 space-y-2">
                 <li>✅ The fundamental concepts of **magnetic fields and forces**.</li>
-                <li>✅ How the **inverse square law** describes magnetic strength.</li>
-                <li>✅ The fascinating relationship of **electromagnetism**.</li>
-                <li>✅ **Real-world applications** where the math of magnetism is crucial.</li>
+                <li>✅ The application of the **inverse square law** in describing magnetic strength.</li>
+                <li>✅ The principles and factors influencing **electromagnetism**.</li>
+                <li>✅ **Real-world applications** where the mathematics of magnetism is crucial.</li>
             </ul>
             <p class="text-lg text-gray-700 mt-4">
-                **Remember:** Magnetism is not just a mysterious force; it's a phenomenon that can be precisely described and manipulated using mathematical principles. By understanding these principles, **we** unlock the secrets of the universe and build the technologies of tomorrow!
+                **Conclusion:** Magnetism is not merely a mysterious force; it is a phenomenon that can be precisely described and manipulated using mathematical principles. By understanding these principles, we unlock the secrets of the universe and contribute to the development of future technologies.
             </p>
-            <p class="text-xl font-bold text-accent-secondary mt-4">Keep your **Panther Vision** sharp and explore the invisible forces all around you! 🐾</p>
+            <p class="text-xl font-bold text-accent-secondary mt-4">Continue your exploration of the invisible forces that shape our world! 🐾</p>
         </section>
 
         <section id="resources" class="mb-12 p-6 bg-white rounded-lg shadow-md">
             <h2 class="text-3xl font-bold accent-color mb-4">📚 Further Exploration & Resources</h2>
-            <h3 class="text-2xl font-bold accent-color mb-3">🎯 Choose Your Learning Focus</h3>
-            <label for="physics-math-strand" class="block text-gray-700 text-lg font-medium mb-2">Select a Physics/Math Strand to customize your resources:</label>
+            <h3 class="text-2xl font-bold accent-color mb-3">🎯 Targeted Learning Resources</h3>
+            <label for="physics-math-strand" class="block text-gray-700 text-lg font-medium mb-2">Select a Physics/Mathematics Strand to customize your resources:</label>
             <select id="physics-math-strand" class="block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-accent-color focus:border-accent-color mb-4">
                 <option>HS-PS2-5 – Forces and Motion: Electric and Magnetic Fields</option>
                 <option>HS-PS3-2 – Energy: Electromagnetism and Energy Conversion</option>
@@ -901,7 +904,6 @@ html_content = """
 
             // Initial calls
             updateWelcomeMessage();
-            // Removed previous function calls that were causing errors.
         });
     </script>
 </body>
